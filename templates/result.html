@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Detection - Result</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1E3C72, #2A5298);
+      color: #fff;
+      overflow-x: hidden;
+      padding-top: 100px; /* Increased for fixed nav */
+    }
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 50px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      z-index: 1000;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+      position: relative;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FFD700;
+      transition: width 0.3s;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    /* Glassmorphism Container */
+    .container {
+      margin: 120px auto 60px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 800px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.4);
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .container h1 {
+      margin-bottom: 30px;
+      font-size: 2.8rem;
+      color: #FFD700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    /* Result Card Styles */
+    .result {
+      margin: 20px 0;
+      padding: 25px;
+      border-radius: 12px;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .result i {
+      font-size: 2.2rem;
+      color: #FFD700;
+    }
+    .fraudulent {
+      border: 2px solid rgba(255, 85, 85, 0.8);
+      background: rgba(255, 85, 85, 0.15);
+      animation: pulse 2s infinite;
+    }
+    .non-fraudulent {
+      border: 2px solid rgba(85, 255, 85, 0.8);
+      background: rgba(85, 255, 85, 0.15);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Transaction Details */
+    .transaction-details {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 25px;
+      border-radius: 12px;
+      margin: 30px 0;
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.8;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .transaction-details:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .transaction-details h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #FFD700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .transaction-details ul {
+      list-style: none;
+    }
+    .transaction-details li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+    }
+    .transaction-details i {
+      color: #FFD700;
+      font-size: 1.2rem;
+    }
+    /* AI Suggestions */
+    .ai-suggestions {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 25px;
+      border-radius: 12px;
+      margin: 30px 0;
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.8;
+      position: relative;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .ai-suggestions h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #FFD700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ai-suggestions ul {
+      list-style: none;
+    }
+    .ai-suggestions li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    .ai-suggestions li.immediate {
+      background: rgba(255, 85, 85, 0.15);
+      border-left: 4px solid #FF5555;
+    }
+    .ai-suggestions li.preventive {
+      background: rgba(85, 255, 85, 0.15);
+      border-left: 4px solid #55FF55;
+    }
+    .ai-suggestions i {
+      color: #FFD700;
+      font-size: 1.2rem;
+      margin-top: 4px;
+    }
+    .ai-suggestions .toggle-btn {
+      cursor: pointer;
+      color: #FFD700;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .ai-suggestions .hidden {
+      display: none;
+    }
+    /* Action Buttons */
+    .actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .actions a, .actions button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(45deg, #FFD700, #FFC107);
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .actions a:hover, .actions button:hover {
+      background: linear-gradient(45deg, #FFC107, #FFA000);
+      transform: scale(1.05);
+    }
+    /* Tooltips */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+        padding: 25px;
+      }
+      .container h1 {
+        font-size: 2rem;
+      }
+      .result {
+        flex-direction: column;
+        font-size: 1.1rem;
+      }
+      .transaction-details, .ai-suggestions {
+        padding: 20px;
+      }
+      .transaction-details li, .ai-suggestions li {
+        font-size: 0.9rem;
+      }
+      nav {
+        padding: 10px 20px;
+        gap: 15px;
+      }
+      nav a {
+        font-size: 0.9rem;
+      }
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('landing') }}">Home</a>
+    <a href="{{ url_for('predict') }}">Back to Predict</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </nav>
+  <div class="container">
+    <h1>Prediction Result</h1>
+    {% if result %}
+      <div class="result {{ 'fraudulent' if result == 'FRAUDULENT' else 'non-fraudulent' }}">
+        {% if result == 'FRAUDULENT' %}
+          <i class="fas fa-exclamation-triangle"></i>
+        {% else %}
+          <i class="fas fa-check-circle"></i>
+        {% endif %}
+        <div>
+          <strong>Prediction:</strong> This transaction is {{ result }}<br>
+          <strong>Probability of Fraud:</strong> {{ probability }}
+        </div>
+      </div>
+      <div class="transaction-details">
+        <h3><i class="fas fa-info-circle"></i> Transaction Details</h3>
+        <ul>
+          <li><i class="fas fa-user"></i> <strong>User ID:</strong> {{ transaction.user_id }}</li>
+          <li><i class="fas fa-dollar-sign"></i> <strong>Amount:</strong> ${{ "%.2f" | format(transaction.transaction_amount) }}</li>
+          <li><i class="fas fa-clock"></i> <strong>Time:</strong> {{ transaction.transaction_time }}</li>
+          <li><i class="fas fa-exchange-alt"></i> <strong>Type:</strong> {{ transaction.transaction_type }}</li>
+          <li><i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ transaction.location }}</li>
+          <li><i class="fas fa-mobile-alt"></i> <strong>Device ID:</strong> {{ transaction.device_id }}</li>
+          <li class="tooltip"><i class="fas fa-network-wired"></i> <strong>IP Address:</strong> {{ transaction.ip_address }}
+            <span class="tooltiptext">The IP address identifies the network location of the device used for the transaction.</span>
+          </li>
+          <li><i class="fas fa-mobile"></i> <strong>Is Mobile:</strong> {{ 'Yes' if transaction.is_mobile == 1 else 'No' }}</li>
+        </ul>
+        <button onclick="copyTransactionDetails()">Copy Details</button>
+      </div>
+      {% if ai_suggestions %}
+        <div class="ai-suggestions">
+          <h3><i class="fas fa-lightbulb"></i> AI Suggestions</h3>
+          <ul id="suggestions-list">
+            {% for suggestion in ai_suggestions.split('\n') %}
+              {% if suggestion.strip().startswith('-') %}
+                <li class="{{ 'immediate' if 'Immediate' in suggestion else 'preventive' }}">
+                  <i class="fas {{ 'fa-exclamation-circle' if 'Immediate' in suggestion else 'fa-shield-alt' }}"></i>
+                  {{ suggestion.strip()[2:] | safe }}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+          <span class="toggle-btn" onclick="toggleSuggestions()">Show More</span>
+        </div>
+      {% endif %}
+      <div class="actions">
+        <a href="{{ url_for('predict') }}">New Prediction</a>
+        <a href="{{ url_for('landing') }}">Home</a>
+        {% if ai_suggestions %}
+          <button onclick="downloadSuggestions()">Download Suggestions</button>
+        {% endif %}
+      </div>
+    {% else %}
+      <p>No result available. Please submit a transaction from the <a href="{{ url_for('predict') }}">predict page</a>.</p>
+    {% endif %}
+  </div>
+
+  <script>
+    // Copy Transaction Details to Clipboard
+    function copyTransactionDetails() {
+      const details = `
+User ID: {{ transaction.user_id }}
+Amount: ${{ "%.2f" | format(transaction.transaction_amount) }}
+Time: {{ transaction.transaction_time }}
+Type: {{ transaction.transaction_type }}
+Location: {{ transaction.location }}
+Device ID: {{ transaction.device_id }}
+IP Address: {{ transaction.ip_address }}
+Is Mobile: {{ 'Yes' if transaction.is_mobile == 1 else 'No' }}
+      `.trim();
+      navigator.clipboard.writeText(details).then(() => {
+        alert('Transaction details copied to clipboard!');
+      });
+    }
+
+    // Download AI Suggestions as Text File
+    function downloadSuggestions() {
+      const suggestions = `{{ ai_suggestions | replace('\n', '\n') }}`.trim();
+      const blob = new Blob([suggestions], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ai_suggestions.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Toggle Suggestions Visibility
+    function toggleSuggestions() {
+      const list = document.getElementById('suggestions-list');
+      const btn = document.querySelector('.toggle-btn');
+      const isHidden = list.classList.contains('hidden');
+      list.classList.toggle('hidden');
+      btn.textContent = isHidden ? 'Show Less' : 'Show More';
+    }
+
+    // Initially hide suggestions beyond the first 3
+    document.addEventListener('DOMContentLoaded', () => {
+      const suggestions = document.querySelectorAll('#suggestions-list li');
+      if (suggestions.length > 3) {
+        for (let i = 3; i < suggestions.length; i++) {
+          suggestions[i].style.display = 'none';
+        }
+        document.getElementById('suggestions-list').classList.add('hidden');
+      } else {
+        document.querySelector('.toggle-btn').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Detection - Banking Advanced UI</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+    integrity="sha512-4o+1X4ORRjO/2RGl/k1PvxIuXlAZ7mWDmJRymr9TErND6E8j/PGjkJOSvZD9I+3uRkE7DyqV1l8XbwQv5pYvug==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary-color: #1E3C72;
+      --secondary-color: #2A5298;
+      --accent-color: #FFD700;
+      --light-color: #ffffff;
+      --dark-color: #333;
+    }
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--light-color);
+      overflow-x: hidden;
+    }
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 20px 50px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: background 0.3s, padding 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 50px;
+    }
+    nav .logo {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+    nav ul li {
+      margin-left: 25px;
+      position: relative;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: var(--light-color);
+      font-weight: 600;
+    }
+    nav ul li a::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-color);
+      left: 0;
+      bottom: -5px;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease-in-out;
+    }
+    nav ul li a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    /* Hero Section with Video Background */
+    #hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #hero video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1;
+      transform: translate(-50%, -50%);
+      filter: brightness(0.6);
+    }
+    #hero .hero-content {
+      position: relative;
+      text-align: center;
+      max-width: 800px;
+      animation: fadeIn 2s ease-in-out;
+    }
+    #hero h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    #hero h1 i {
+      margin-right: 10px;
+    }
+    #hero p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+    }
+    #hero a {
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 1rem;
+      border: 2px solid var(--accent-color);
+      border-radius: 50px;
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: background 0.3s, transform 0.3s;
+    }
+    #hero a:hover {
+      background: var(--accent-color);
+      color: var(--dark-color);
+      transform: scale(1.05);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Features Section */
+    #features {
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+    }
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+      width: 300px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .feature-card i {
+      font-size: 3rem;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+    }
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    /* Modal for More Feature Details */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.7);
+    }
+    .modal-content {
+      background: rgba(255, 255, 255, 0.95);
+      margin: 10% auto;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 600px;
+      position: relative;
+      color: var(--dark-color);
+    }
+    .close {
+      color: var(--dark-color);
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    /* Banking Card Section */
+    #banking-card {
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+    .bank-card {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      width: 350px;
+      height: 200px;
+      border-radius: 20px;
+      padding: 20px;
+      color: var(--light-color);
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .bank-card:hover {
+      transform: scale(1.05);
+    }
+    .bank-card .chip {
+      width: 50px;
+      height: 35px;
+      background: #D4AF37;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .bank-card .card-number {
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+    .bank-card .card-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    /* Testimonials Section */
+    #testimonials {
+      padding: 80px 20px;
+      background: rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+    #testimonials h2 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+    }
+    .testimonial-container {
+      max-width: 800px;
+      margin: auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .testimonial-slide {
+      display: none;
+      animation: fadeIn 1.5s;
+    }
+    .testimonial-slide.active {
+      display: block;
+    }
+    .testimonial-slide p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .testimonial-slide h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    /* Contact Section */
+    #contact {
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+    #contact h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    #contact form {
+      max-width: 500px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #contact input, #contact textarea {
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      font-size: 1rem;
+    }
+    #contact button {
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      background: var(--accent-color);
+      color: var(--dark-color);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    #contact button:hover {
+      background: #fff;
+      transform: scale(1.05);
+    }
+    /* Scroll-to-Top Button */
+    #scrollToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--accent-color);
+      color: var(--dark-color);
+      border: none;
+      padding: 15px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+      transition: transform 0.3s;
+    }
+    #scrollToTop:hover {
+      transform: scale(1.1);
+    }
+    /* Footer */
+    footer {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      nav {
+        padding: 10px 20px;
+      }
+      nav ul li {
+        margin-left: 15px;
+      }
+      #hero h1 {
+        font-size: 3rem;
+      }
+      #hero p {
+        font-size: 1.2rem;
+      }
+      .feature-card, .bank-card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="logo">BankSecure</div>
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#banking-card">Dashboard</a></li>
+      <li><a href="#testimonials">Testimonials</a></li>
+      <li><a href="#contact">Contact</a></li>
+      {% if 'username' in session %}
+        <li><a href="{{ url_for('predict') }}">Predict</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('register') }}">Register</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- Hero Section with Video Background -->
+  <section id="hero">
+    <video autoplay muted loop>
+      <source src="static\videoplayback.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="hero-content">
+      <h1><i class="fas fa-university"></i> Fraud Detection for Banking</h1>
+      <p>Empowering financial security with advanced AI and real-time analytics.</p>
+      <a href="#features">Explore Features</a>
+    </div>
+  </section>
+  <!-- Features Section -->
+  <section id="features">
+    <div class="feature-card" onclick="openModal('secure')">
+      <i class="fas fa-shield-alt"></i>
+      <h3>Secure Transactions</h3>
+      <p>Top-tier encryption and fraud monitoring to protect your funds.</p>
+    </div>
+    <div class="feature-card" onclick="openModal('realtime')">
+      <i class="fas fa-clock"></i>
+      <h3>Real-Time Monitoring</h3>
+      <p>Instant alerts and live analytics keep you ahead of threats.</p>
+    </div>
+    <div class="feature-card" onclick="openModal('analytics')">
+      <i class="fas fa-chart-line"></i>
+      <h3>Fraud Analytics</h3>
+      <p>Utilize AI to predict and prevent fraudulent activities before they occur.</p>
+    </div>
+  </section>
+  <!-- Modal Popup for Feature Details -->
+  <div id="featureModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modalBody">
+        <!-- Dynamic content injected here -->
+      </div>
+    </div>
+  </div>
+  <!-- Banking Card Section -->
+  <section id="banking-card">
+    <div class="bank-card">
+      <div class="chip"></div>
+      <div class="card-number">**** **** **** 1234</div>
+      <div class="card-info">
+        <span>BankSecure</span>
+        <span>12/28</span>
+      </div>
+    </div>
+  </section>
+  <!-- Testimonials Section -->
+  <section id="testimonials">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial-container">
+      <div class="testimonial-slide active">
+        <p>"BankSecure's fraud detection system saved our organization from a major breach. The real-time alerts are a game-changer!"</p>
+        <h4>- Alex M.</h4>
+      </div>
+      <div class="testimonial-slide">
+        <p>"The user-friendly dashboard and detailed analytics make it easy to monitor our transactions. Highly recommended!"</p>
+        <h4>- Jamie L.</h4>
+      </div>
+      <div class="testimonial-slide">
+        <p>"Their advanced AI truly understands the banking landscape. We feel much safer with BankSecure protecting our data."</p>
+        <h4>- Morgan S.</h4>
+      </div>
+    </div>
+  </section>
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <form>
+      <input type="text" placeholder="Your Name" required />
+      <input type="email" placeholder="Your Email" required />
+      <textarea rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+  <!-- Scroll-to-Top Button -->
+  <button id="scrollToTop"><i class="fas fa-arrow-up"></i></button>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 BankSecure Fraud Detection. All rights reserved.</p>
+  </footer>
+  <script>
+    // Navbar scroll effect and scroll-to-top button
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if(window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      const scrollBtn = document.getElementById('scrollToTop');
+      scrollBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+    document.getElementById('scrollToTop').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Modal functionality for feature cards
+    function openModal(feature) {
+      const modal = document.getElementById('featureModal');
+      const modalBody = document.getElementById('modalBody');
+      let content = '';
+      switch(feature) {
+        case 'secure':
+          content = `<h2>Secure Transactions</h2>
+                     <p>We use state-of-the-art encryption and continuous monitoring to safeguard every transaction, ensuring your funds remain secure.</p>`;
+          break;
+        case 'realtime':
+          content = `<h2>Real-Time Monitoring</h2>
+                     <p>Our system provides live alerts and dynamic data analytics so you can respond immediately to any suspicious activity.</p>`;
+          break;
+        case 'analytics':
+          content = `<h2>Fraud Analytics</h2>
+                     <p>Advanced machine learning algorithms analyze transaction patterns to predict and prevent fraud before it happens.</p>`;
+          break;
+        default:
+          content = `<h2>Feature Detail</h2><p>More information coming soon.</p>`;
+      }
+      modalBody.innerHTML = content;
+      modal.style.display = 'block';
+    }
+    function closeModal() {
+      document.getElementById('featureModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+      const modal = document.getElementById('featureModal');
+      if (event.target == modal) {
+        modal.style.display = 'none';
+      }
+    };
+
+    // Testimonial Carousel
+    let testimonialIndex = 0;
+    const testimonials = document.querySelectorAll('.testimonial-slide');
+    function showNextTestimonial() {
+      testimonials[testimonialIndex].classList.remove('active');
+      testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+      testimonials[testimonialIndex].classList.add('active');
+    }
+    setInterval(showNextTestimonial, 5000);
+  </script>
+</body>
+</html>

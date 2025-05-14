@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fraud Detection - Predict</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1E3C72, #2A5298);
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 20px 50px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: background 0.3s, padding 0.3s;
+    }
+    nav a {
+      color: #f8f8f8;
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 20px;
+    }
+    nav a:hover {
+      color: #FFD700;
+    }
+    /* Container with Glassmorphism */
+    .container {
+      margin: 100px auto 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .container h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+    /* Form Styles */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    label {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+    input, select {
+      padding: 12px 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #000000;
+      font-size: 1rem;
+      outline: none;
+      transition: background 0.3s;
+    }
+    input:focus, select:focus {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    button {
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      background: #FFD700;
+      color: #333;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    button:hover {
+      background: #e6c200;
+      transform: scale(1.02);
+    }
+    /* Flash Messages */
+    .flash-message {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 0, 0, 0.3);
+      font-size: 0.9rem;
+    }
+    /* Fade In Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+        padding: 30px;
+      }
+      .container h1 {
+        font-size: 2rem;
+      }
+      nav {
+        padding: 10px 20px;
+      }
+      nav a {
+        margin-right: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-left">
+      <a href="{{ url_for('landing') }}">Home</a>
+    </div>
+    <div class="nav-right">
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </nav>
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Fraud Detection Prediction</h1>
+    <form method="POST" action="{{ url_for('predict') }}">
+      <label for="user_id">User ID:</label>
+      <input type="number" name="user_id" id="user_id" required min="1" max="1000">
+
+      <label for="transaction_amount">Transaction Amount (INR):</label>
+      <input type="number" name="transaction_amount" id="transaction_amount" step="0.01" required min="0">
+
+      <label for="transaction_time">Transaction Time (e.g., 2/20/2022 7:00:00):</label>
+      <input type="text" name="transaction_time" id="transaction_time" required>
+
+      <label for="transaction_type">Transaction Type:</label>
+      <select name="transaction_type" id="transaction_type" required>
+        <option value="withdrawal">Withdrawal</option>
+        <option value="deposit">Deposit</option>
+        <option value="transfer">Transfer</option>
+        <option value="payment">Payment</option>
+      </select>
+
+      <label for="location">Location:</label>
+      <select name="location" id="location" required>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Pune">Pune</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Lucknow">Lucknow</option>
+        <option value="Surat">Surat</option>
+        <option value="Kanpur">Kanpur</option>
+        <option value="Nagpur">Nagpur</option>
+        <option value="Patna">Patna</option>
+        <option value="Indore">Indore</option>
+        <option value="Thane">Thane</option>
+        <option value="Bhopal">Bhopal</option>
+        <option value="Visakhapatnam">Visakhapatnam</option>
+        <option value="Pimpri-Chinchwad">Pimpri-Chinchwad</option>
+        <option value="Ghaziabad">Ghaziabad</option>
+      </select>
+
+      <label for="device_id">Device ID (e.g., device_103):</label>
+      <input type="text" name="device_id" id="device_id" required>
+
+      <label for="ip_address">IP Address (e.g., 192.168.0.103):</label>
+      <input type="text" name="ip_address" id="ip_address" required>
+
+      <label for="is_mobile">Is Mobile:</label>
+      <select name="is_mobile" id="is_mobile" required>
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+
+      <button type="submit">Predict</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+</body>
+</html>
